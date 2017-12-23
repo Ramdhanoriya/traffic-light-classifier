@@ -36,7 +36,7 @@ def avg_green(rgb_image):
   return avg_green
 
 def high_saturation_pixels(rgb_image, threshold):
-    # Returns average red and green content from high saturation pixels
+  # Returns average red and green content from high saturation pixels
   high_sat_pixels = []
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
   for i in range(32):
@@ -52,15 +52,10 @@ def high_saturation_pixels(rgb_image, threshold):
   for pixel in high_sat_pixels:
     sum_red += pixel[0]
     sum_green += pixel[1]
-  # print(sum_red)
-  # print(sum_green)
-
-  # print(high_saturation_pixels[0])
-  # print(np.sum(high_saturation_pixels[0])) # Sum of red pixels
 
   # TODO: Use sum() instead of manually adding them up
   avg_red = sum_red / len(high_sat_pixels)
-  avg_green = sum_green / len(high_sat_pixels)
+  avg_green = sum_green / len(high_sat_pixels) * 0.8 # 0.8 to favor red's chances
   return avg_red, avg_green
 
 def highest_sat_pixel(rgb_image):
@@ -69,10 +64,9 @@ def highest_sat_pixel(rgb_image):
 
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
   s = hsv[:,:,1]
-  # print(s)
-  # print(np.max(s))
-  x,y = (np.unravel_index(np.argmax(s), s.shape))
-  if rgb_image[x,y, 0] > rgb_image[x,y, 1]:
+
+  x, y = (np.unravel_index(np.argmax(s), s.shape))
+  if rgb_image[x, y, 0] > rgb_image[x,y, 1] * 0.9: # 0.9 to favor red's chances
     return 1, 0 # Red has a higher content
   return 0, 1
 

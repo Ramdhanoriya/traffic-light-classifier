@@ -72,9 +72,10 @@ if __name__ == '__main__':
   for image in MISCLASSIFIED:
     if image[2] == [1, 0, 0]:
       red_missclassified.append(image)
-  print('Number of red images that were misclassiifed = ', len(red_missclassified))
+  print('Number of red images that were misclassified = ', len(red_missclassified))
 
   # image = red_missclassified[0][0]
+  # # image1 = red_missclassified[1][0]
   # r = image[:,:,0]
   # g = image[:,:,1]
   # b = image[:,:,2]
@@ -84,12 +85,11 @@ if __name__ == '__main__':
   # s = hsv[:,:,1]
   # v = hsv[:,:,2]
 
-  # random.shuffle(red_missclassified)
   # f, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(20,10))
 
-  # ax1.imshow(STANDARDIZED_TEST_LIST[0][0])
-  # ax2.imshow(h)
-  # ax3.imshow(s)
-  # ax4.imshow(v)
+  # ax1.imshow(image)
+  # # ax2.imshow(image1)
+  # # ax3.imshow(g)
+  # # ax4.imshow(b)
 
   # plt.show()
