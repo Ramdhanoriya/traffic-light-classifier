@@ -51,10 +51,11 @@ if __name__ == '__main__':
 
   # Standardize the test data
   STANDARDIZED_TEST_LIST = helpers.standardize(TEST_IMAGE_LIST)
+  # features.highest_sat_pixel(STANDARDIZED_TEST_LIST[2][0])
 
   # Shuffle the standardized test data
   random.shuffle(STANDARDIZED_TEST_LIST)
-  image = STANDARDIZED_TEST_LIST[0][0]
+  # image = STANDARDIZED_TEST_LIST[0][0]
 
   # Find all misclassified images in a given test set
   MISCLASSIFIED = get_misclassified_images(STANDARDIZED_TEST_LIST)
@@ -67,31 +68,28 @@ if __name__ == '__main__':
   print('Accuracy: ' + str(accuracy))
   print("Number of misclassified images = " + str(len(MISCLASSIFIED)) +' out of '+ str(total))
 
-  # red_missclassified = []
-  # for image in MISCLASSIFIED:
-  #   if image[2] == [1, 0, 0]:
-  #     red_missclassified.append(image)
-  # print(len(red_missclassified))
+  red_missclassified = []
+  for image in MISCLASSIFIED:
+    if image[2] == [1, 0, 0]:
+      red_missclassified.append(image)
+  print('Number of red images that were misclassiifed = ', len(red_missclassified))
 
   # image = red_missclassified[0][0]
-  r = image[:,:,0]
-  g = image[:,:,1]
-  b = image[:,:,2]
+  # r = image[:,:,0]
+  # g = image[:,:,1]
+  # b = image[:,:,2]
 
-  hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-  h = hsv[:,:,0]
-  s = hsv[:,:,1]
-  v = hsv[:,:,2]
+  # hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+  # h = hsv[:,:,0]
+  # s = hsv[:,:,1]
+  # v = hsv[:,:,2]
 
   # random.shuffle(red_missclassified)
-  f, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(20,10))
+  # f, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(20,10))
 
-  ax1.imshow(image)
-  ax2.imshow(h)
-  ax3.imshow(s)
-  ax4.imshow(v)
+  # ax1.imshow(STANDARDIZED_TEST_LIST[0][0])
+  # ax2.imshow(h)
+  # ax3.imshow(s)
+  # ax4.imshow(v)
 
-  print(features.high_saturation_pixels(image)[0])
-  # print(features.avg_red(red_missclassified[0][0]))
-  # print(features.avg_green(red_missclassified[0][0]))
-  plt.show()
+  # plt.show()

@@ -35,22 +35,21 @@ def avg_green(rgb_image):
 
   return avg_green
 
-def high_saturation_pixels(rgb_image):
+def high_saturation_pixels(rgb_image, threshold):
     # Returns average red and green content from high saturation pixels
-  high_saturation_pixels = []
-  saturation_threshold = 100
+  high_sat_pixels = []
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
   for i in range(32):
     for j in range(32):
-      if hsv[i][j][1] > saturation_threshold:
-        high_saturation_pixels.append(rgb_image[i][j])
+      if hsv[i][j][1] > threshold:
+        high_sat_pixels.append(rgb_image[i][j])
 
-  if not high_saturation_pixels:
-    return 0, 0
+  if not high_sat_pixels:
+    return highest_sat_pixel(rgb_image)
 
   sum_red = 0
   sum_green = 0
-  for pixel in high_saturation_pixels:
+  for pixel in high_sat_pixels:
     sum_red += pixel[0]
     sum_green += pixel[1]
   # print(sum_red)
@@ -58,12 +57,28 @@ def high_saturation_pixels(rgb_image):
 
   # print(high_saturation_pixels[0])
   # print(np.sum(high_saturation_pixels[0])) # Sum of red pixels
-  avg_red = sum_red / len(high_saturation_pixels)
-  avg_green = sum_green / len(high_saturation_pixels)
+
+  # TODO: Use sum() instead of manually adding them up
+  avg_red = sum_red / len(high_sat_pixels)
+  avg_green = sum_green / len(high_sat_pixels)
   return avg_red, avg_green
 
+def highest_sat_pixel(rgb_image):
+  '''Finds the higest saturation pixel, and checks if it has a higher green
+  content, or a higher red content'''
+
+  hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
+  s = hsv[:,:,1]
+  # print(s)
+  # print(np.max(s))
+  x,y = (np.unravel_index(np.argmax(s), s.shape))
+  if rgb_image[x,y, 0] > rgb_image[x,y, 1]:
+    return 1, 0 # Red has a higher content
+  return 0, 1
+
 def estimate_label(rgb_image): # Standardized RGB image
-  red, green = high_saturation_pixels(rgb_image)
+  saturation_threshold = 80
+  red, green = high_saturation_pixels(rgb_image, saturation_threshold)
   if red > green:
     return [1,0,0] # Classify as red
   return [0,0,1] # Classify as green
