@@ -18,42 +18,6 @@ def create_feature(rgb_image):
 
   return avg_brightness
 
-def standardize_input(image):
-
-  # Shrink all images to be 32x32 px
-  standard_im = cv2.resize(image, (32,32))
-  return standard_im
-
-def one_hot_encode(label):
-
-  # Return the correct encoded label. A bit brute force, but it works.
-  if label == 'red':
-      return [1, 0, 0]
-  if label == 'yellow':
-      return [0, 1, 0]
-  return [0, 0, 1]
-
-def standardize(image_list):
-
-  # Empty image data array
-  standard_list = []
-
-  # Iterate through all the image-label pairs
-  for item in image_list:
-    image = item[0]
-    label = item[1]
-
-    # Standardize the image
-    standardized_im = standardize_input(image)
-
-    # One-hot encode the label
-    one_hot_label = one_hot_encode(label)
-
-    # Append the image, and it's one hot encoded label to the full, processed list of image data
-    standard_list.append((standardized_im, one_hot_label))
-
-  return standard_list
-
 def get_misclassified_images(test_images):
   # Track misclassified images by placing them into a list
   misclassified_images_labels = []
@@ -80,22 +44,17 @@ def get_misclassified_images(test_images):
   return misclassified_images_labels
 
 if __name__ == '__main__':
-  # Using the load_dataset function in helpers.py
-  # Load test data
-
   IMAGE_DIR_TRAINING = "traffic_light_images/training/"
   IMAGE_DIR_TEST = "traffic_light_images/test/"
 
   TEST_IMAGE_LIST = helpers.load_dataset(IMAGE_DIR_TEST)
 
   # Standardize the test data
-  STANDARDIZED_TEST_LIST = standardize(TEST_IMAGE_LIST)
-
-  # Standardize all training images
-  # STANDARDIZED_LIST = standardize(IMAGE_LIST)
+  STANDARDIZED_TEST_LIST = helpers.standardize(TEST_IMAGE_LIST)
 
   # Shuffle the standardized test data
   random.shuffle(STANDARDIZED_TEST_LIST)
+  image = STANDARDIZED_TEST_LIST[0][0]
 
   # Find all misclassified images in a given test set
   MISCLASSIFIED = get_misclassified_images(STANDARDIZED_TEST_LIST)
@@ -108,14 +67,31 @@ if __name__ == '__main__':
   print('Accuracy: ' + str(accuracy))
   print("Number of misclassified images = " + str(len(MISCLASSIFIED)) +' out of '+ str(total))
 
-  random.shuffle(MISCLASSIFIED)
+  # red_missclassified = []
+  # for image in MISCLASSIFIED:
+  #   if image[2] == [1, 0, 0]:
+  #     red_missclassified.append(image)
+  # print(len(red_missclassified))
+
+  # image = red_missclassified[0][0]
+  r = image[:,:,0]
+  g = image[:,:,1]
+  b = image[:,:,2]
+
+  hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+  h = hsv[:,:,0]
+  s = hsv[:,:,1]
+  v = hsv[:,:,2]
+
+  # random.shuffle(red_missclassified)
   f, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(20,10))
 
-  ax1.imshow(MISCLASSIFIED[0][0])
-  ax2.imshow(MISCLASSIFIED[1][0])
-  ax3.imshow(MISCLASSIFIED[2][0])
-  ax4.imshow(MISCLASSIFIED[3][0])
+  ax1.imshow(image)
+  ax2.imshow(h)
+  ax3.imshow(s)
+  ax4.imshow(v)
 
-  print(features.avg_red(MISCLASSIFIED[0][0]))
-  print(features.avg_green(MISCLASSIFIED[0][0]))
+  print(features.high_saturation_pixels(image)[0])
+  # print(features.avg_red(red_missclassified[0][0]))
+  # print(features.avg_green(red_missclassified[0][0]))
   plt.show()

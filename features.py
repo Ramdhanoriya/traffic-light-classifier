@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 
 def create_feature(rgb_image):
 
@@ -34,16 +35,35 @@ def avg_green(rgb_image):
 
   return avg_green
 
-def mask_saturation(rgb_image):
+def high_saturation_pixels(rgb_image):
     # Returns average red and green content from high saturation pixels
-  total_green = []
-  total_red = []
+  high_saturation_pixels = []
   saturation_threshold = 100
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
-  # for pixel in hsv[:][:][1]:
-    # if pixel > 100:
+  for i in range(32):
+    for j in range(32):
+      if hsv[i][j][1] > saturation_threshold:
+        high_saturation_pixels.append(rgb_image[i][j])
+
+  if not high_saturation_pixels:
+    return 0, 0
+
+  sum_red = 0
+  sum_green = 0
+  for pixel in high_saturation_pixels:
+    sum_red += pixel[0]
+    sum_green += pixel[1]
+  # print(sum_red)
+  # print(sum_green)
+
+  # print(high_saturation_pixels[0])
+  # print(np.sum(high_saturation_pixels[0])) # Sum of red pixels
+  avg_red = sum_red / len(high_saturation_pixels)
+  avg_green = sum_green / len(high_saturation_pixels)
+  return avg_red, avg_green
 
 def estimate_label(rgb_image): # Standardized RGB image
-  if avg_red(rgb_image) > avg_green(rgb_image):
+  red, green = high_saturation_pixels(rgb_image)
+  if red > green:
     return [1,0,0] # Classify as red
   return [0,0,1] # Classify as green
