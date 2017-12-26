@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 
+
 def create_feature(rgb_image):
 
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV) # Convert to HSV color space
@@ -10,30 +11,6 @@ def create_feature(rgb_image):
   avg_brightness = sum_brightness / area # Find the average
 
   return avg_brightness
-
-def avg_red(rgb_image):
-  # Determines the average red content in a standardized RGB image
-
-  sum_red = np.sum(rgb_image[:,:,0]) # Sum the red values
-  area = 32*32
-  avg_red = sum_red / area # Find the average
-
-  return avg_red
-
-def max_red(rgb_image):
-  return (np.max(rgb_image[:,:,0]))
-
-def max_green(rgb_image):
-  return (np.max(rgb_image[:,:,1]))
-
-def avg_green(rgb_image):
-  # Determines the average red content in a standardized RGB image
-
-  sum_green = np.sum(rgb_image[:,:,1]) # Sum the red values
-  area = 32*32
-  avg_green = sum_green / area # Find the average
-
-  return avg_green
 
 def high_saturation_pixels(rgb_image, threshold):
   # Returns average red and green content from high saturation pixels

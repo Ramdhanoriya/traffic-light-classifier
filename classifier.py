@@ -1,7 +1,6 @@
 import cv2 # computer vision library
 import helpers # helper functions
 import features # functions to determine features
-
 import random
 import numpy as np
 import matplotlib.pyplot as plt
