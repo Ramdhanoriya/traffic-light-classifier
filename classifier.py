@@ -74,8 +74,6 @@ if __name__ == '__main__':
   MISCLASSIFIED = get_misclassified_images(STANDARDIZED_TEST_LIST)
   calculate_accuracy(STANDARDIZED_TEST_LIST, MISCLASSIFIED)
 
-  # features.test(image)
-
   # image = red_missclassified[0][0]
   # # image1 = red_missclassified[1][0]
   # r = image[:,:,0]

@@ -57,6 +57,19 @@ def estimate_label(rgb_image): # Standardized RGB image
     return [1,0,0] # Classify as red
   return [0,0,1] # Classify as green
 
+
+def findNonZero(rgb_image):
+  rows, cols, _ = rgb_image.shape
+  counter = 0
+
+  for row in range(rows):
+    for col in range(cols):
+      pixel = rgb_image[row, col]
+      if sum(pixel) != 0:
+        counter = counter + 1
+
+  return counter
+
 def test(rgb_image):
   # Green = 60 255 255
   # Yellow = 90 255 255
@@ -67,7 +80,7 @@ def test(rgb_image):
   avg_saturation = sum_saturation / area # Find the average
 
   sat_low = int(avg_saturation * 1.3)
-  print(sat_low)
+  # print(sat_low)
   # sat_low = 65
   val_low = 140
   hi = 255
@@ -90,15 +103,23 @@ def test(rgb_image):
   red_mask = cv2.inRange(hsv, lower_red, upper_red)
   red_result = cv2.bitwise_and(rgb_image, rgb_image, mask = red_mask)
 
-  sum_green = cv2.findNonZero(green_result)
-  sum_yellow = cv2.findNonZero(yellow_result)
-  sum_red = cv2.findNonZero(red_result)
+  # for i in range(32):
+  #   for j in range(32):
+  #     k = green_result[i,j]
+  #     if sum(k) != 0:
+  #       print(k)
+
+  # print(findNonZero(green_result))
+
+  sum_green = findNonZero(green_result)
+  sum_yellow = findNonZero(yellow_result)
+  sum_red = findNonZero(red_result)
 
   if sum_red >= sum_yellow and sum_red >= sum_green:
-    return [1,0,0]
+    return [1,0,0] # Red
   if sum_yellow >= sum_green:
-    return [0,1,0]
-  return [0,0,1]
+    return [0,1,0] # Yellow
+  return [0,0,1] # Green
 
   # f, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(1, 5, figsize = (20,10))
   # ax1.imshow(rgb_image)
@@ -107,3 +128,4 @@ def test(rgb_image):
   # ax4.imshow(green_result)
   # ax5.imshow(hsv)
   # plt.show()
+
