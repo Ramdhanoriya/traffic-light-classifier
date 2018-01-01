@@ -8,7 +8,6 @@ import matplotlib.image as mpimg # for loading in images
 
 
 def create_feature(rgb_image):
-
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV) # Convert to HSV color space
 
   sum_brightness = np.sum(hsv[:,:,2]) # Sum the brightness values
@@ -42,24 +41,7 @@ def get_misclassified_images(test_images):
   # Return the list of misclassified [image, predicted_label, true_label] values
   return misclassified_images_labels
 
-if __name__ == '__main__':
-  IMAGE_DIR_TRAINING = "traffic_light_images/training/"
-  IMAGE_DIR_TEST = "traffic_light_images/test/"
-
-  TEST_IMAGE_LIST = helpers.load_dataset(IMAGE_DIR_TEST)
-
-  # Standardize the test data
-  STANDARDIZED_TEST_LIST = helpers.standardize(TEST_IMAGE_LIST)
-  # features.highest_sat_pixel(STANDARDIZED_TEST_LIST[2][0])
-
-  # Shuffle the standardized test data
-  random.shuffle(STANDARDIZED_TEST_LIST)
-  # image = STANDARDIZED_TEST_LIST[0][0]
-
-  # Find all misclassified images in a given test set
-  MISCLASSIFIED = get_misclassified_images(STANDARDIZED_TEST_LIST)
-
-  # Accuracy calculations
+def calculate_accuracy(STANDARDIZED_TEST_LIST, MISCLASSIFIED):
   total = len(STANDARDIZED_TEST_LIST)
   num_correct = total - len(MISCLASSIFIED)
   accuracy = num_correct/total
@@ -72,6 +54,27 @@ if __name__ == '__main__':
     if image[2] == [1, 0, 0]:
       red_missclassified.append(image)
   print('Number of red images that were misclassified = ', len(red_missclassified))
+
+
+if __name__ == '__main__':
+  IMAGE_DIR_TRAINING = "traffic_light_images/training/"
+  IMAGE_DIR_TEST = "traffic_light_images/test/"
+
+  TEST_IMAGE_LIST = helpers.load_dataset(IMAGE_DIR_TEST)
+
+  # Standardize the test data
+  STANDARDIZED_TEST_LIST = helpers.standardize(TEST_IMAGE_LIST)
+  # features.highest_sat_pixel(STANDARDIZED_TEST_LIST[2][0])
+
+  # Shuffle the standardized test data
+  random.shuffle(STANDARDIZED_TEST_LIST)
+  image = STANDARDIZED_TEST_LIST[0][0]
+
+  # Find all misclassified images in a given test set
+  MISCLASSIFIED = get_misclassified_images(STANDARDIZED_TEST_LIST)
+  calculate_accuracy(STANDARDIZED_TEST_LIST, MISCLASSIFIED)
+
+  # features.test(image)
 
   # image = red_missclassified[0][0]
   # # image1 = red_missclassified[1][0]
