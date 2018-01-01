@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 def create_feature(rgb_image):
-
+  '''Basic brightness feature, required by Udacity'''
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV) # Convert to HSV color space
 
   sum_brightness = np.sum(hsv[:,:,2]) # Sum the brightness values
@@ -14,7 +14,7 @@ def create_feature(rgb_image):
   return avg_brightness
 
 def high_saturation_pixels(rgb_image, threshold):
-  # Returns average red and green content from high saturation pixels
+  '''Returns average red and green content from high saturation pixels'''
   high_sat_pixels = []
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
   for i in range(32):
@@ -49,14 +49,7 @@ def highest_sat_pixel(rgb_image):
   return 0, 1
 
 def estimate_label(rgb_image): # Standardized RGB image
-  return test(rgb_image)
-
-  saturation_threshold = 80
-  red, green = high_saturation_pixels(rgb_image, saturation_threshold)
-  if red > green:
-    return [1,0,0] # Classify as red
-  return [0,0,1] # Classify as green
-
+  return red_green_yellow(rgb_image)
 
 def findNonZero(rgb_image):
   rows, cols, _ = rgb_image.shape
@@ -70,20 +63,18 @@ def findNonZero(rgb_image):
 
   return counter
 
-def test(rgb_image):
-  # Green = 60 255 255
-  # Yellow = 90 255 255
-
+def red_green_yellow(rgb_image):
+  '''Determines the Red, Green, and Yellow content in each image using HSV and
+  experimentally determined thresholds. Returns a classification based on the
+  values.
+  '''
   hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
   sum_saturation = np.sum(hsv[:,:,1]) # Sum the brightness values
   area = 32*32
   avg_saturation = sum_saturation / area # Find the average
 
   sat_low = int(avg_saturation * 1.3)
-  # print(sat_low)
-  # sat_low = 65
   val_low = 140
-  hi = 255
 
   # Green
   lower_green = np.array([70,sat_low,val_low])
@@ -103,14 +94,6 @@ def test(rgb_image):
   red_mask = cv2.inRange(hsv, lower_red, upper_red)
   red_result = cv2.bitwise_and(rgb_image, rgb_image, mask = red_mask)
 
-  # for i in range(32):
-  #   for j in range(32):
-  #     k = green_result[i,j]
-  #     if sum(k) != 0:
-  #       print(k)
-
-  # print(findNonZero(green_result))
-
   sum_green = findNonZero(green_result)
   sum_yellow = findNonZero(yellow_result)
   sum_red = findNonZero(red_result)
@@ -128,4 +111,3 @@ def test(rgb_image):
   # ax4.imshow(green_result)
   # ax5.imshow(hsv)
   # plt.show()
-

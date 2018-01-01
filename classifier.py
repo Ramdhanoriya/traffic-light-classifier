@@ -7,16 +7,9 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg # for loading in images
 
 
-def create_feature(rgb_image):
-  hsv = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV) # Convert to HSV color space
-
-  sum_brightness = np.sum(hsv[:,:,2]) # Sum the brightness values
-  area = 32*32
-  avg_brightness = sum_brightness / area # Find the average
-
-  return avg_brightness
-
 def get_misclassified_images(test_images):
+  '''Determines which images are misclassified from the estimate_label function'''
+
   # Track misclassified images by placing them into a list
   misclassified_images_labels = []
 
@@ -75,7 +68,6 @@ if __name__ == '__main__':
   calculate_accuracy(STANDARDIZED_TEST_LIST, MISCLASSIFIED)
 
   # image = red_missclassified[0][0]
-  # # image1 = red_missclassified[1][0]
   # r = image[:,:,0]
   # g = image[:,:,1]
   # b = image[:,:,2]
